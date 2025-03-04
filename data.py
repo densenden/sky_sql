@@ -1,6 +1,10 @@
 from sqlalchemy import create_engine, text
 
 QUERY_FLIGHT_BY_ID = "SELECT flights.*, airlines.airline, flights.ID as FLIGHT_ID, flights.DEPARTURE_DELAY as DELAY FROM flights JOIN airlines ON flights.airline = airlines.id WHERE flights.ID = :id"
+QUERY_DELAYED_FLIGHTS_BY_AIRLINE = "SELECT flights.*, airlines.airline, flights.ID as FLIGHT_ID, flights.DEPARTURE_DELAY as DELAY FROM flights JOIN airlines ON flights.airline = airlines.id WHERE airlines.airline = :airline AND flights.DEPARTURE_DELAY > 0"
+QUERY_DELAYED_FLIGHTS_BY_AIRPORT = "SELECT flights.*, airlines.airline, flights.ID as FLIGHT_ID, flights.DEPARTURE_DELAY as DELAY FROM flights JOIN airlines ON flights.airline = airlines.id WHERE flights.ORIGIN_AIRPORT = :airport AND flights.DEPARTURE_DELAY > 0"
+QUERY_FLIGHTS_BY_DATE = "SELECT flights.*, airlines.airline, flights.ID as FLIGHT_ID, flights.DEPARTURE_DELAY as DELAY FROM flights JOIN airlines ON flights.airline = airlines.id WHERE flights.YEAR = :year AND flights.MONTH = :month AND flights.DAY = :day"
+
 
 class FlightData:
     """
@@ -22,7 +26,13 @@ class FlightData:
         and returns a list of records (dictionary-like objects).
         If an exception was raised, print the error, and return an empty list.
         """
-        pass # Your code here
+        try:
+            with self._engine.connect() as connection:
+                results = connection.execute(text(query), params)
+                rows = results.fetchall()
+                return rows
+        except Exception as e:
+            return []
 
 
     def get_flight_by_id(self, flight_id):
@@ -34,9 +44,38 @@ class FlightData:
         return self._execute_query(QUERY_FLIGHT_BY_ID, params)
 
 
+    def get_delayed_flights_by_airline(self, airline):
+        """
+        Searches for delayed flights by airline name.
+        """
+        params = {'airline': airline}
+        return self._execute_query(QUERY_DELAYED_FLIGHTS_BY_AIRLINE, params)
+
+
+    def get_delayed_flights_by_airport(self, airport):
+        """
+        Searches for delayed flights by origin airport IATA code.
+        """
+        params = {'airport': airport}
+        return self._execute_query(QUERY_DELAYED_FLIGHTS_BY_AIRPORT, params)
+
+
+    def get_flights_by_date(self, day, month, year):
+        """
+        Searches for flights by date using separate day, month, and year columns.
+        """
+        params = {
+            'year': year,
+            'month': month,
+            'day': day
+        }
+
+        return self._execute_query(QUERY_FLIGHTS_BY_DATE, params)
+
+
     def __del__(self):
         """
-        Closes the connection to the databse when the object is about to be destroyed
+        Closes the connection to the database when the object is about to be destroyed
         """
         self._engine.dispose()
     

@@ -72,7 +72,7 @@ def flights_by_date(data_manager):
 
 def print_results(results):
     """
-    Get a list of flight results (List of dictionary-like objects from SQLAachemy).
+    Get a list of flight results (List of dictionary-like objects from SQLAlchemy).
     Even if there is one result, it should be provided in a list.
     Each object *has* to contain the columns:
     FLIGHT_ID, ORIGIN_AIRPORT, DESTINATION_AIRPORT, AIRLINE, and DELAY.
