@@ -5,6 +5,7 @@
 
 from sqlalchemy import create_engine, text
 
+# SQL queries
 QUERY_FLIGHT_BY_ID = """
 SELECT flights.*, airlines.airline, flights.ID as FLIGHT_ID, flights.DEPARTURE_DELAY as DELAY 
 FROM flights 
@@ -42,16 +43,7 @@ GROUP BY airlines.AIRLINE
 ORDER BY avg(flights.DEPARTURE_DELAY) DESC;
 """
 
-class FlightData:
-    def __init__(self, uri):
-        self.uri = uri
-        # Initialize other attributes and database connection
 
-    def __str__(self):
-        return f"FlightData connected to {self.uri}"
-
-    def __repr__(self):
-        return f"FlightData(uri={self.uri})"
 
 class FlightData:
     """
@@ -65,6 +57,12 @@ class FlightData:
         Initialize a new engine using the given database URI
         """
         self._engine = create_engine(db_uri)
+
+    def __str__(self):
+        return f"FlightData connected to {self.uri}"
+
+    def __repr__(self):
+        return f"FlightData(uri={self.uri})"
 
 
     def _execute_query(self, query, params):
