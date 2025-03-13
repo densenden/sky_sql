@@ -2,6 +2,7 @@
 import plotly.graph_objects as go
 import matplotlib.pyplot as plt
 
+
 class FlightDataVisualizer:
     def __init__(self, data_manager):
         self.data_manager = data_manager
@@ -32,7 +33,8 @@ class FlightDataVisualizer:
         delayed_flights_dict = {row[0]: row[1] for row in delayed_flights}
 
         airlines = list(total_flights_dict.keys())
-        percentages = [(delayed_flights_dict.get(airline, 0) / total_flights_dict[airline]) * 100 for airline in airlines]
+        percentages = [(delayed_flights_dict.get(airline, 0) / total_flights_dict[airline]) * 100 for airline in
+                       airlines]
 
         plt.figure(figsize=(10, 6))
         plt.bar(airlines, percentages, color='skyblue')
@@ -133,7 +135,7 @@ class FlightDataVisualizer:
             if None in (origin_lat, origin_lon, dest_lat, dest_lon):
                 continue
 
-            color = f'rgb(255, {max(0, int(255 * (1 - delay_pct/100)))}, 0)'
+            color = f'rgb(255, {max(0, int(255 * (1 - delay_pct / 100)))}, 0)'
 
             fig.add_trace(
                 go.Scattermapbox(

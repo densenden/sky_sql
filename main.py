@@ -3,7 +3,6 @@ from datetime import datetime
 import sqlalchemy
 from vis import FlightDataVisualizer
 
-
 SQLITE_URI = 'sqlite:///data/flights.sqlite3'
 IATA_LENGTH = 3
 
@@ -121,17 +120,21 @@ def show_menu_and_get_input():
             pass
         print("Try again...")
 
+
 """
 Function Dispatch Dictionary
 """
 FUNCTIONS = {1: (flight_by_id, "Show flight by ID"),
-    2: (flights_by_date, "Show flights by date"),
-    3: (delayed_flights_by_airline, "Delayed flights by airline"),
-    4: (delayed_flights_by_airport, "Delayed flights by origin airport"),
-    5: (lambda dm: FlightDataVisualizer(dm).plot_delayed_flights_by_hour(), "📊 Percentage of delayed flights per hour of the day"),
-    6: (lambda dm: FlightDataVisualizer(dm).plot_delayed_flights_percentage(), "📊 Percentage of delayed flights per airline"),
-    7: (quit, "Exit")
-}
+             2: (flights_by_date, "Show flights by date"),
+             3: (delayed_flights_by_airline, "Delayed flights by airline"),
+             4: (delayed_flights_by_airport, "Delayed flights by origin airport"),
+             5: (lambda dm: FlightDataVisualizer(dm).plot_delayed_flights_by_hour(),
+                 "📊 Percentage of delayed flights per hour of the day"),
+             6: (lambda dm: FlightDataVisualizer(dm).plot_delayed_flights_percentage(),
+                 "📊 Percentage of delayed flights per airline"),
+             7: (quit, "Exit")
+             }
+
 
 def main():
     # Create an instance of the Data Object using our SQLite URI

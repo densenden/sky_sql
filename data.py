@@ -5,10 +5,42 @@
 
 from sqlalchemy import create_engine, text
 
-QUERY_FLIGHT_BY_ID = "SELECT flights.*, airlines.airline, flights.ID as FLIGHT_ID, flights.DEPARTURE_DELAY as DELAY FROM flights JOIN airlines ON flights.airline = airlines.id WHERE flights.ID = :id"
-QUERY_DELAYED_FLIGHTS_BY_AIRLINE = "SELECT flights.*, airlines.airline, flights.ID as FLIGHT_ID, flights.DEPARTURE_DELAY as DELAY FROM flights JOIN airlines ON flights.airline = airlines.id WHERE airlines.airline = :airline AND flights.DEPARTURE_DELAY > 0"
-QUERY_DELAYED_FLIGHTS_BY_AIRPORT = "SELECT flights.*, airlines.airline, flights.ID as FLIGHT_ID, flights.DEPARTURE_DELAY as DELAY FROM flights JOIN airlines ON flights.airline = airlines.id WHERE flights.ORIGIN_AIRPORT = :airport AND flights.DEPARTURE_DELAY > 0"
-QUERY_FLIGHTS_BY_DATE = "SELECT flights.*, airlines.airline, flights.ID as FLIGHT_ID, flights.DEPARTURE_DELAY as DELAY FROM flights JOIN airlines ON flights.airline = airlines.id WHERE flights.YEAR = :year AND flights.MONTH = :month AND flights.DAY = :day"
+QUERY_FLIGHT_BY_ID = """
+SELECT flights.*, airlines.airline, flights.ID as FLIGHT_ID, flights.DEPARTURE_DELAY as DELAY 
+FROM flights 
+JOIN airlines ON flights.airline = airlines.id 
+WHERE flights.ID = :id
+"""
+
+QUERY_DELAYED_FLIGHTS_BY_AIRLINE = """
+SELECT flights.*, airlines.airline, flights.ID as FLIGHT_ID, flights.DEPARTURE_DELAY as DELAY 
+FROM flights 
+JOIN airlines ON flights.airline = airlines.id 
+WHERE airlines.airline = :airline AND flights.DEPARTURE_DELAY >= 20
+"""
+
+QUERY_DELAYED_FLIGHTS_BY_AIRPORT = """
+SELECT flights.*, airlines.airline, flights.ID as FLIGHT_ID, flights.DEPARTURE_DELAY as DELAY 
+FROM flights 
+JOIN airlines ON flights.airline = airlines.id 
+WHERE flights.ORIGIN_AIRPORT = :airport AND flights.DEPARTURE_DELAY >= 20
+"""
+
+QUERY_FLIGHTS_BY_DATE = """
+SELECT flights.*, airlines.airline, flights.ID as FLIGHT_ID, flights.DEPARTURE_DELAY as DELAY 
+FROM flights 
+JOIN airlines ON flights.airline = airlines.id 
+WHERE flights.YEAR = :year AND flights.MONTH = :month AND flights.DAY = :day
+"""
+
+QUERY_AVERAGE_DELAY_BY_AIRLINE = """
+SELECT airlines.AIRLINE, avg(flights.DEPARTURE_DELAY) AS 'avg_delay'
+FROM flights
+JOIN airlines
+ON flights.AIRLINE = airlines.ID
+GROUP BY airlines.AIRLINE
+ORDER BY avg(flights.DEPARTURE_DELAY) DESC;
+"""
 
 class FlightData:
     def __init__(self, uri):
